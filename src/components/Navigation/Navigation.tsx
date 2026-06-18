@@ -27,17 +27,6 @@ const Navigation: React.FC<NavigationProps> = ({ onNavClick }) => {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  useEffect(() => {
-    if (menuOpen) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = ''
-    }
-    return () => {
-      document.body.style.overflow = ''
-    }
-  }, [menuOpen])
-
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string): void => {
     setMenuOpen(false)
     onNavClick(e, targetId)
@@ -45,8 +34,10 @@ const Navigation: React.FC<NavigationProps> = ({ onNavClick }) => {
 
   return (
     <header
-      className={`sticky top-0 z-50 transition-all duration-300 ${
-        scrolled ? 'glass shadow-lg shadow-black/20' : 'bg-[#0c0f14]/80 backdrop-blur-md border-b border-white/[0.04]'
+      className={`sticky top-0 z-50 transition-all duration-300 border-b border-white/[0.04] pt-[env(safe-area-inset-top)] ${
+        scrolled
+          ? 'bg-[#0c0f14] md:glass shadow-lg shadow-black/20'
+          : 'bg-[#0c0f14] md:bg-[#0c0f14]/80 md:backdrop-blur-md'
       }`}
     >
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 md:px-8 md:py-4">
@@ -106,27 +97,20 @@ const Navigation: React.FC<NavigationProps> = ({ onNavClick }) => {
         </button>
       </nav>
 
-      {/* Mobile menu overlay */}
+      {/* Mobile menu dropdown */}
       <div
-        className={`md:hidden fixed inset-0 top-[57px] z-40 glass transition-all duration-300 ${
-          menuOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
+        className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out bg-[#0c0f14] ${
+          menuOpen ? 'max-h-80 border-t border-white/[0.06]' : 'max-h-0'
         }`}
       >
-        <ul className="flex flex-col items-center justify-center gap-8 h-full -mt-16">
-          {navItems.map((item, index) => (
-            <li
-              key={item.id}
-              className="animate-fade-up opacity-0"
-              style={{
-                animationDelay: menuOpen ? `${index * 0.08}s` : '0s',
-                animationFillMode: 'forwards',
-              }}
-            >
+        <ul className="flex flex-col items-center gap-6 py-6">
+          {navItems.map((item) => (
+            <li key={item.id}>
               <a
                 href={`#${item.id}`}
                 onClick={(e) => handleClick(e, item.id)}
-                className={`text-2xl font-display font-medium transition-colors ${
-                  activeSection === item.id ? 'text-accent' : 'text-ink-muted hover:text-ink'
+                className={`text-xl font-display font-medium transition-colors ${
+                  activeSection === item.id ? 'text-accent' : 'text-ink hover:text-accent'
                 }`}
               >
                 {item.label}

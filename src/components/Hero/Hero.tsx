@@ -21,14 +21,16 @@ const Hero: React.FC<HeroProps> = ({ name, title, coverImageUrl }) => {
   }, [])
 
   return (
-    <section className="relative w-full h-[50vh] min-h-[320px] max-h-[520px] overflow-hidden">
+    <section className="relative w-full h-[45vh] min-h-[280px] max-h-[520px] overflow-hidden -mt-14 pt-14 md:mt-0 md:pt-0 md:h-[50vh] md:min-h-[320px]">
       {/* Background layer with parallax */}
       <div
         ref={parallaxRef}
-        className="hero-parallax absolute inset-0 scale-110"
+        className={`hero-parallax absolute inset-0 scale-110 ${
+          coverImageUrl ? 'bg-cover bg-top md:bg-center' : ''
+        }`}
         style={
           coverImageUrl
-            ? { backgroundImage: `url(${coverImageUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' }
+            ? { backgroundImage: `url(${coverImageUrl})` }
             : undefined
         }
       >
